@@ -1,8 +1,18 @@
 import java.util.Scanner;
 import java.util.Random;
 
+/**
+ * 
+ * @author Marc Renault
+ * @author Ajmain Naqib
+ *
+ */
 public class Battleship {
 
+    static int height;
+    static int width;
+    public static int i, j;
+    
     /**
      * This method converts a String representing a base (or radix) 26 number into a decimal (or 
      * base 10) number. The String representation of the base 26 number uses the letters of the 
@@ -40,7 +50,7 @@ public class Battleship {
             ASCII = eachletter - 'A';
             lenghts = lenght - i - 1;
             doubleI = (double)(lenghts);
-            sum = sum + (int) ((ASCII * Math.pow(26, doubleI)));
+            sum = sum + (int) ((ASCII * Math.pow(26, doubleI)));    //
             
             //System.out.println("Debug: i=" + i);
             //System.out.println("Debug: char=" + eachletter);
@@ -49,8 +59,6 @@ public class Battleship {
             
             
         }
-        //char inputLetter = coord.charAt(i); // char take in only letters. how many character the input has to follow my loop
-        //int cryptoNum = (int) inputLetter - 96;// this gives a ASCII value of the input letter. ASCII of A is 97
         
         return sum; 
     }
@@ -83,7 +91,7 @@ public class Battleship {
             num = (num - remainder) / 26;
         }
       
-        System.out.println("Debug: result=" + result);
+        //System.out.println("Debug: result=" + result);
           return result;
     }
 
@@ -188,7 +196,20 @@ public class Battleship {
      * @param board The game board to initialize.
      */
     public static void initBoard(char board[][]) {
-        //FIXME
+        
+        //board=char[i][j];
+        //System.out.println("Debug: board.length= "+ board.length);
+        
+        
+        for (i=0; i< board.length; i++) {   // width
+            //System.out.println("Debug: board.width= "+ board.length);
+            for (j=0; j< board[i].length; j++) {    // height
+                //System.out.println("Debug: board i .height= "+ board[i].length);
+                board[i][j]= Config.WATER_CHAR;
+         
+            }
+            
+        }
     }
 
     /**
@@ -204,7 +225,15 @@ public class Battleship {
      * @param caption The board caption.
      */
     public static void printBoard(char board[][], String caption) {
-        //FIXME
+        
+//        for (int row = 0; row < matrix.length; row++) {
+//            for (int column = 0; column < matrix[row].length; column++) {
+//                System.out.print(matrix[row][column] + " ");
+//            }
+//            
+//            System.out.println();
+//        }
+
     }
     
     /**
@@ -222,8 +251,39 @@ public class Battleship {
      *         -2 if the ship would go out-of-bounds of the board.
      */
     public static int checkWater(char board[][], int xcoord, int ycoord, int len, boolean dir) {
-        //FIXME
-        return 0;
+        
+        boolean foundStatus = false;
+        
+        try {
+        if(dir) {   // Vertical Ship 
+            for(i=0; i< len; i++) {
+                
+              if(board[xcoord][ycoord] == Config.WATER_CHAR) {
+                  foundStatus = true ;
+                } else if(!(board[xcoord][ycoord] == Config.WATER_CHAR)) {
+                    foundStatus = false;
+                }
+                ycoord = ycoord+i;
+            }
+        } else {    // Horizontal Ship
+            for(i=0; i< len; i++) {
+                if(board[xcoord][ycoord] == Config.WATER_CHAR) {
+                    foundStatus = true ;
+                }else if(!(board[xcoord][ycoord] == Config.WATER_CHAR)){
+                    foundStatus = false;
+                }
+            xcoord = xcoord+i;
+            }
+        }
+        } catch (Exception e) {
+            return -2;                  //the ship is out-of-bounds of the board.
+        }
+        
+        if(foundStatus) {           //Fix me: Make simpler if statements
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
     /**
@@ -417,10 +477,14 @@ public class Battleship {
         String playAgain = "Would you like to play again? (y/n): ";
         char loop;
         
+        
+        
         System.out.println("Welcome to Battleship!");
         while(loopStatus) {
-            promptInt(sc, "board height",Config.MIN_HEIGHT ,Config.MAX_HEIGHT );
-            promptInt(sc, "board width",Config.MIN_WIDTH ,Config.MAX_WIDTH);
+            height= promptInt(sc, "board height",Config.MIN_HEIGHT ,Config.MAX_HEIGHT );
+            width= promptInt(sc, "board width",Config.MIN_WIDTH ,Config.MAX_WIDTH);
+            
+          initBoard(new char[height][width]);
             
             System.out.println();
             loop = promptChar(sc, playAgain);

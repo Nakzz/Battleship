@@ -17,7 +17,7 @@ import java.util.Scanner;
  * intended for use within this class.
  * 
  * @author Marc Renault
- * @author FIXME add your name here when you add test
+ * @author Ajmain Naqib
  *
  */
 public class TestBattleship {
@@ -30,16 +30,16 @@ public class TestBattleship {
      */
     public static void main(String[] args) {
         // Milestone 1
-        testCoordAlphaToNum();
-        testCoordNumToAlpha();
+        //testCoordAlphaToNum();
+        //testCoordNumToAlpha();
         //testPromptInt();
         //testPromptStr();
         // Milestone 2
         testCheckWater();
-        testPlaceShip();
+        //testPlaceShip();
         // Milestone 3
-        testTakeShot();
-        testCheckLost();
+        //testTakeShot();
+        //testCheckLost();
     }
     
     private static void testCoordAlphaToNum() {
@@ -97,11 +97,57 @@ public class TestBattleship {
     }
     
     private static void testCheckWater() {
-        //FIXME
+        int numTests = 3;
+        int passed = numTests;
+        int res;
+        char[][] boardDim = new char[4][5];
+        Battleship.initBoard(boardDim);
+        if((res = Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1) {
+            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1, but " + res);
+            passed--;
+        }
+        if((res = Battleship.checkWater( boardDim, 2, 4, 2, false)) != 1) {
+            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, false)) != 1, but " + res);
+            passed--;
+        }
+        if((res = Battleship.checkWater( boardDim, 2, 4, 5, false)) != -2) {
+            System.out.println(" Battleship.checkWater( boardDim, 2, 4, 5, false)) != -2, but " + res);
+            passed--;
+        }
+        
+        
+        System.out.println("testCheckWater: Passed " + passed + " of " + numTests + " tests.");
     }
     
     private static void testPlaceShip() {
-        //FIXME
+        int numTests = 6;
+        int passed = numTests;
+        int res;
+        if((res = Battleship.coordAlphaToNum("BAAA")) != 17576) {
+            System.out.println("FAILED: Battleship.coordAlphaToNum(\"BAAA\") != 17576, but " + res);
+            passed--;
+        }
+        if((res = Battleship.coordAlphaToNum("ZERTY")) != 11506714) {
+            System.out.println("FAILED: Battleship.coordAlphaToNum(\"ZERTY\") != 11506714, but " + res);
+            passed--;
+        }
+        if((res = Battleship.coordAlphaToNum("zerty")) != 11506714) {
+            System.out.println("FAILED: Battleship.coordAlphaToNum(\"zerty\") != 11506714, but " + res);
+            passed--;
+        }
+        if((res = Battleship.coordAlphaToNum("&é\"")) != -14747) {
+            System.out.println("FAILED: Battleship.coordAlphaToNum(\"&é\\\"\") != -14747, but " + res);
+            passed--;
+        }
+        if((res = Battleship.coordAlphaToNum("baaa")) != 17576) {
+            System.out.println("FAILED: Battleship.coordAlphaToNum(\"baaa\") != 17576, but " + res);
+            passed--;
+        }
+        if((res = Battleship.coordAlphaToNum("&é\"")) != -14747) {
+            System.out.println("FAILED: Battleship.coordAlphaToNum(\"&é\\\"\") != -14747, but " + res);
+            passed--;
+        }
+        System.out.println("testCoordAlphatoNum: Passed " + passed + " of " + numTests + " tests.");
     }
     
     private static void testTakeShot() {
