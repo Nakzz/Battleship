@@ -240,22 +240,24 @@ public class Battleship {
 
         System.out.print("   ");
         for (j = 0; j < xRange; j++) {
-            System.out.print("" + " " + coordNumToAlpha(j));
+            System.out.print("" + "  " + coordNumToAlpha(j));    // Prints A B C D
         }
         System.out.println();
 
         for (i = 0; i < yRange; i++) {
 
-            System.out.print(" ");
-            System.out.print("" + i);
+            System.out.print("  ");
+            System.out.print("" + i+ "");
 
 
 
             for (j = 0; j < xRange; j++) {
 
-                System.out.print(board[i][j] + " ");
+                System.out.print("  " +board[i][j]);
+                
             }
 
+            System.out.println();
             System.out.println();
         }
 
