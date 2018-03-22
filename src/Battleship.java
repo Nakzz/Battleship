@@ -313,8 +313,25 @@ public class Battleship {
      */
     public static boolean placeShip(char board[][], int xcoord, int ycoord, int len, boolean dir,
                                     int id) {
-        //FIXME
-        return false;
+        char ship = (char) (id + 48);
+
+        try {
+        if(dir) {   // Vertical Ship 
+            for(i=0; i< len; i++) {
+                board[xcoord][ycoord] = ship;
+                ycoord = ycoord+i;
+            }
+        } else {    // Horizontal Ship
+            for(i=0; i< len; i++) {
+                board[xcoord][ycoord] = ship;
+                xcoord = xcoord+i;
+                System.out.println(board[xcoord][ycoord]);
+            }
+        }
+        return true;
+        } catch (Exception e) {
+            return false; 
+        }
     }
 
     /**
@@ -341,8 +358,29 @@ public class Battleship {
      * @return true if the ship is placed successfully, false otherwise.
      */
     public static boolean placeRandomShip(char board[][], int len, int id, Random rand) {
-        //FIXME
-        return false;
+        
+        try {
+            System.out.println("Debug: board.height= "+board[0].length);
+            System.out.println("Debug: board.width= "+board.length);
+            boolean orientation = rand.nextBoolean(); 
+            int xCoord = rand.nextInt((board.length + Config.MIN_WIDTH - 1));
+            int yCoord = rand.nextInt((board[0].length + Config.MIN_HEIGHT -1));
+            int shipSize=0;
+            int shipExist = checkWater(board, xCoord, yCoord, len, orientation);
+            int tries=0;
+            
+            while(!(shipExist == 1 || Config.RAND_SHIP_TRIES <= tries)) {
+                shipSize = rand.nextInt((board.length - Config.MIN_SHIP_LEN) + 1) + Config.MIN_SHIP_LEN;
+                shipExist = checkWater(board, xCoord, yCoord, shipSize, orientation);
+                tries++;
+            }
+            
+            return true;
+            } catch (Exception e) {
+                return false; 
+            }
+        
+        
     }
 
     /**

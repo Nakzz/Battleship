@@ -22,6 +22,7 @@ import java.util.Scanner;
  */
 public class TestBattleship {
 
+    public static char[][] boardDim = new char[5][5];
     /**
      * This is the main method that runs the various tests. Uncomment the tests when
      * you are ready for them to run.
@@ -29,14 +30,19 @@ public class TestBattleship {
      * @param args (unused)
      */
     public static void main(String[] args) {
+        // InitBoard
+        
+        Battleship.initBoard(boardDim);
+        
         // Milestone 1
         //testCoordAlphaToNum();
         //testCoordNumToAlpha();
         //testPromptInt();
         //testPromptStr();
         // Milestone 2
-        testCheckWater();
+        //testCheckWater();
         //testPlaceShip();
+        testPlaceRandomShip();
         // Milestone 3
         //testTakeShot();
         //testCheckLost();
@@ -100,8 +106,7 @@ public class TestBattleship {
         int numTests = 3;
         int passed = numTests;
         int res;
-        char[][] boardDim = new char[4][5];
-        Battleship.initBoard(boardDim);
+
         if((res = Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1) {
             System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1, but " + res);
             passed--;
@@ -120,34 +125,50 @@ public class TestBattleship {
     }
     
     private static void testPlaceShip() {
-        int numTests = 6;
+        int numTests = 3;
         int passed = numTests;
-        int res;
-        if((res = Battleship.coordAlphaToNum("BAAA")) != 17576) {
-            System.out.println("FAILED: Battleship.coordAlphaToNum(\"BAAA\") != 17576, but " + res);
+        boolean res;
+
+        if((res = Battleship.placeShip( boardDim, 2, 4, 2, true, 1)) != true) {
+            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1, but " + res);
             passed--;
         }
-        if((res = Battleship.coordAlphaToNum("ZERTY")) != 11506714) {
-            System.out.println("FAILED: Battleship.coordAlphaToNum(\"ZERTY\") != 11506714, but " + res);
+        if((res = Battleship.placeShip( boardDim, 2, 4, 2, false, 2)) != true) {
+            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, false)) != 1, but " + res);
             passed--;
         }
-        if((res = Battleship.coordAlphaToNum("zerty")) != 11506714) {
-            System.out.println("FAILED: Battleship.coordAlphaToNum(\"zerty\") != 11506714, but " + res);
+        if((res = Battleship.placeShip( boardDim, 2, 4, 5, false, 3)) != false) {
+            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 5, false)) != -2, but " + res);
             passed--;
         }
-        if((res = Battleship.coordAlphaToNum("&é\"")) != -14747) {
-            System.out.println("FAILED: Battleship.coordAlphaToNum(\"&é\\\"\") != -14747, but " + res);
+        
+        
+        System.out.println("testPlaceShip: Passed " + passed + " of " + numTests + " tests.");
+    }
+    
+    
+    private static void testPlaceRandomShip() {
+        int numTests = 3;
+        int passed = numTests;
+        boolean res;
+
+        Random rand = new Random(Config.SEED);
+        
+        if((res = Battleship.placeRandomShip(boardDim, 2, 1, rand)) != true) {
+            System.out.println("FAILED: Battleship.placeRandomShip(boardDim, 2, 1, rand)) != true, but " + res);
             passed--;
         }
-        if((res = Battleship.coordAlphaToNum("baaa")) != 17576) {
-            System.out.println("FAILED: Battleship.coordAlphaToNum(\"baaa\") != 17576, but " + res);
+        if((res = Battleship.placeRandomShip(boardDim, 4, 2, rand)) != true) {
+            System.out.println("FAILED: Battleship.placeRandomShip(boardDim, 4, 2, rand)) != true, but " + res);
             passed--;
         }
-        if((res = Battleship.coordAlphaToNum("&é\"")) != -14747) {
-            System.out.println("FAILED: Battleship.coordAlphaToNum(\"&é\\\"\") != -14747, but " + res);
+        if((res = Battleship.placeRandomShip(boardDim, 6, 3, rand)) != false) {
+            System.out.println("FAILED: Battleship.placeRandomShip(boardDim, 6, 3, rand)) != false, but " + res);
             passed--;
         }
-        System.out.println("testCoordAlphatoNum: Passed " + passed + " of " + numTests + " tests.");
+        
+        
+        System.out.println("testPlaceShip: Passed " + passed + " of " + numTests + " tests.");
     }
     
     private static void testTakeShot() {
