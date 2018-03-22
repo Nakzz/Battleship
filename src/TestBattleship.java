@@ -193,13 +193,13 @@ public class TestBattleship {
                 "FAILED: Battleship.placeRandomShip(boardDim, 4, 2, rand)) != true, but " + res);
             passed--;
         }
-        if ((res = Battleship.placeRandomShip(testBoard, 6, 3, rand)) != false) { // FALSE because
+        if ((res = Battleship.placeRandomShip(testBoard, 9, 8, rand)) != false) { // FALSE because
                                                                                   // ship size is 6,
                                                                                   // and given seed,
                                                                                   // it will always
                                                                                   // be out of bound
             System.out.println(
-                "FAILED: Battleship.placeRandomShip(boardDim, 6, 3, rand)) != true, but " + res);
+                "FAILED: Battleship.placeRandomShip(boardDim, 6, 3, rand)) != false, but " + res);
             passed--;
         }
 

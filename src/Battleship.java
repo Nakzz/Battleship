@@ -279,50 +279,33 @@ public class Battleship {
      */
     public static int checkWater(char board[][], int xcoord, int ycoord, int len, boolean dir) {
 
-        boolean foundStatus = false;
-        yRange = board.length; // Board Height
-        xRange = board[0].length; // Board Width
-        shipLength = len;
-        // System.out.println("Debug: board i .height= "+ board[0].length);
-        // System.out.println("Debug: board.width= "+ board.length);
-
-        try {
-            if (dir) { // Vertical Ship
-                if (yRange < (ycoord + shipLength)) {
-                    return -2; // the ship is out-of-bounds of the board.
-                }
-
-                for (i = 0; i < shipLength; i++) {
-
-                    if (board[ycoord][xcoord] == Config.WATER_CHAR) {
-                        foundStatus = true;
-                    } else if ((board[ycoord][xcoord] != Config.WATER_CHAR)) {
-                        foundStatus = false;
+ if ((xcoord >= 0 && xcoord <= (board[0].length-1)) && (ycoord >=0 && ycoord <= board.length-1)) {
+            
+            if (dir == true) {
+                if ((ycoord+(len-1) <= board.length-1)) {
+                    
+                    for (int i=0; i<len; i++) {
+                        if (board[ycoord+i][xcoord] != Config.WATER_CHAR) {
+                            return -1;
+                        }
                     }
-                    ycoord = ycoord + i;
-                }
-            } else { // Horizontal Ship
-                if (xRange < (xcoord + shipLength)) {
-                    return -2; // the ship is out-of-bounds of the board.
-                }
-                for (i = 0; i < len; i++) {
-                    if (board[ycoord][xcoord] == Config.WATER_CHAR) {
-                        foundStatus = true;
-                    } else if ((board[ycoord][xcoord] != Config.WATER_CHAR)) {
-                        foundStatus = false;
-                    }
-                    xcoord = xcoord + i;
+                    return 1;
                 }
             }
-        } catch (Exception e) {
-            return -2; // the ship is out-of-bounds of the board.
+            
+            if (dir == false) {
+                if ((xcoord+(len-1) <= board[0].length-1)) {
+                    
+                    for (int i=0; i<len; i++) {
+                        if (board[ycoord][xcoord+i] != Config.WATER_CHAR) {
+                            return -1;
+                        }
+                    }
+                    return 1;
+                }
+            }
         }
-
-        if (foundStatus) { // Fix me: Make simpler if statements
-            return 1;
-        } else {
-            return -1;
-        }
+        return -2;     
     }
 
     /**
@@ -499,7 +482,7 @@ public class Battleship {
                 yCoord = promptInt(sc, "y-coord", 0, (yRange - 1));
             }
 
-            //spaceExists = checkWater(boardPrime, xCoord, yCoord, shipLength, orientation);
+            spaceExists = checkWater(boardPrime, xCoord, yCoord, shipLength, orientation);
 
             if (spaceExists == 1) {
                 shipPlaced = placeShip(boardPrime, xCoord, yCoord, shipLength, orientation, id);
