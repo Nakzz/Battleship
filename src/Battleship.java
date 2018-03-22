@@ -296,7 +296,7 @@ public class Battleship {
 
                     if (board[ycoord][xcoord] == Config.WATER_CHAR) {
                         foundStatus = true;
-                    } else if (!(board[ycoord][xcoord] == Config.WATER_CHAR)) {
+                    } else if ((board[ycoord][xcoord] != Config.WATER_CHAR)) {
                         foundStatus = false;
                     }
                     ycoord = ycoord + i;
@@ -308,7 +308,7 @@ public class Battleship {
                 for (i = 0; i < len; i++) {
                     if (board[ycoord][xcoord] == Config.WATER_CHAR) {
                         foundStatus = true;
-                    } else if (!(board[ycoord][xcoord] == Config.WATER_CHAR)) {
+                    } else if ((board[ycoord][xcoord] != Config.WATER_CHAR)) {
                         foundStatus = false;
                     }
                     xcoord = xcoord + i;
@@ -489,6 +489,7 @@ public class Battleship {
 
 
             } else { // Horizontal
+                orientation= false;
                 shipLength = promptInt(sc, "ship length", Config.MIN_SHIP_LEN, xRange);
                 xCoordMin = coordNumToAlpha(0);
                 xCoordMax = coordNumToAlpha(xRange - shipLength);
@@ -498,7 +499,7 @@ public class Battleship {
                 yCoord = promptInt(sc, "y-coord", 0, (yRange - 1));
             }
 
-            spaceExists = checkWater(boardPrime, xCoord, yCoord, shipLength, orientation);
+            //spaceExists = checkWater(boardPrime, xCoord, yCoord, shipLength, orientation);
 
             if (spaceExists == 1) {
                 shipPlaced = placeShip(boardPrime, xCoord, yCoord, shipLength, orientation, id);
@@ -509,7 +510,7 @@ public class Battleship {
                     return false;
                 }
                 tryAgainBool= false;
-            } else {
+            } else if (spaceExists == -1){
                 tryAgain = promptChar(sc, "No room for ship. Try again? (y/n): ");
                 
                 if (tryAgain == 'y') {
@@ -518,6 +519,8 @@ public class Battleship {
                     return false;
                 }
 
+            } else {
+                tryAgainBool = false;
             }
         }
 
@@ -633,18 +636,19 @@ public class Battleship {
                     loop = promptChar(sc, "Error adding ships. Restart game? (y/n): ");
                     if (loop == 'y') {
                         loopStatus = true;
-                    } else if (loop == 'n') {
+                    } else {
                         loopStatus = false;
+                        break;
                     }
                 }
             }
 
-            System.out.println();
+            //System.out.println();
             loop = promptChar(sc, playAgain);
 
             if (loop == 'y') {
                 loopStatus = true;
-            } else if (loop == 'n') {
+            } else {
                 loopStatus = false;
             }
         }
