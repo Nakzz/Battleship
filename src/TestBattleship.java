@@ -22,7 +22,7 @@ import java.util.Scanner;
  */
 public class TestBattleship {
 
-    public static char[][] boardDim = new char[5][5];
+    public static char[][] boardDim = new char[6][8];
     /**
      * This is the main method that runs the various tests. Uncomment the tests when
      * you are ready for them to run.
@@ -40,8 +40,8 @@ public class TestBattleship {
         //testPromptInt();
         //testPromptStr();
         // Milestone 2
-        //testCheckWater();
-        //testPlaceShip();
+        testCheckWater();
+        testPlaceShip();
         testPlaceRandomShip();
         // Milestone 3
         //testTakeShot();
@@ -107,11 +107,11 @@ public class TestBattleship {
         int passed = numTests;
         int res;
 
-        if((res = Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1) {
+        if((res = Battleship.checkWater(boardDim, 5, 8, 2, true)) != 1) {
             System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1, but " + res);
             passed--;
         }
-        if((res = Battleship.checkWater( boardDim, 2, 4, 2, false)) != 1) {
+        if((res = Battleship.checkWater(boardDim, 2, 4, 2, false)) != 1) {
             System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, false)) != 1, but " + res);
             passed--;
         }
@@ -130,20 +130,22 @@ public class TestBattleship {
         boolean res;
 
         if((res = Battleship.placeShip( boardDim, 2, 4, 2, true, 1)) != true) {
-            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, true)) != 1, but " + res);
+            System.out.println("FAILED: Battleship.placeShip( boardDim, 2, 4, 2, true)) != 1, but " + res);
             passed--;
         }
         if((res = Battleship.placeShip( boardDim, 2, 4, 2, false, 2)) != true) {
-            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 2, false)) != 1, but " + res);
+            System.out.println("FAILED: Battleship.placeShip( boardDim, 2, 4, 2, false)) != 1, but " + res);
             passed--;
         }
-        if((res = Battleship.placeShip( boardDim, 2, 4, 5, false, 3)) != false) {
-            System.out.println("FAILED: Battleship.checkWater( boardDim, 2, 4, 5, false)) != -2, but " + res);
+        if((res = Battleship.placeShip( boardDim, 4, 4, 5, false, 3)) != false) {
+            System.out.println("FAILED: Battleship.placeShip( boardDim, 2, 4, 5, false)) != -2, but " + res);
             passed--;
         }
         
         
         System.out.println("testPlaceShip: Passed " + passed + " of " + numTests + " tests.");
+        
+        //Battleship.printBoard(boardDim, "My Ship");
     }
     
     
@@ -162,13 +164,13 @@ public class TestBattleship {
             System.out.println("FAILED: Battleship.placeRandomShip(boardDim, 4, 2, rand)) != true, but " + res);
             passed--;
         }
-        if((res = Battleship.placeRandomShip(boardDim, 6, 3, rand)) != false) {
-            System.out.println("FAILED: Battleship.placeRandomShip(boardDim, 6, 3, rand)) != false, but " + res);
+        if((res = Battleship.placeRandomShip(boardDim, 6, 3, rand)) != false) { // FALSE because ship size is 6, and given seed, it will always be out of bound
+            System.out.println("FAILED: Battleship.placeRandomShip(boardDim, 6, 3, rand)) != true, but " + res);
             passed--;
         }
         
         
-        System.out.println("testPlaceShip: Passed " + passed + " of " + numTests + " tests.");
+        System.out.println("testPlaceRandomShip: Passed " + passed + " of " + numTests + " tests.");
     }
     
     private static void testTakeShot() {
