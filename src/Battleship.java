@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 /**
@@ -13,8 +15,8 @@ public class Battleship {
         spaceExists, shipID, shipNum;
     static char loop, orientationInput, tryAgain;
     public static int i, j;
-    static boolean orientation, shipPlaced, randomShipPlaced, tryAgainBool, addShipStatus;
-    static char userBoard[][], enemyBoard[][];
+    static boolean orientation, shipPlaced, randomShipPlaced, tryAgainBool, addShipStatus, winnerFound;
+    static char userBoard[][], enemyBoard[][], trackBoard[][];
 
 
     /**
@@ -315,8 +317,20 @@ public class Battleship {
      * @return true if all the ships have been sunk, false otherwise.
      */
     public static boolean checkLost(char board[][]) {
-        // FIXME
-        return false;
+        int i, j;
+        yRange = board.length; // Board Height
+        xRange = board[0].length; // Board Width
+
+        for (i = 0; i < xRange; i++) { // width
+            // System.out.println("Debug: board.width= "+ board.length);
+            for (j = 0; j < yRange; j++) { // height
+                if((takeShot(board, i, j)) == 1) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
     }
 
     /**
@@ -522,8 +536,45 @@ public class Battleship {
      *         would be a hit. -1 if the shot is out-of-bounds.
      */
     public static int takeShot(char[][] board, int x, int y) {
-        // FIXME
+
+        
+        int xcoord = x;
+        int ycoord = y;
+        
+        
+        try {
+            if (board[ycoord][xcoord] == Config.WATER_CHAR) {
+                return 2;
+            } else if ((board[ycoord][xcoord] == Config.HIT_CHAR) || (board[ycoord][xcoord] == Config.MISS_CHAR )) {   
+                return 3;   
+            } 
+            
+            for(i=1; i<10; i++) {
+                char ship = (char) (i + 48);
+                
+                if ((board[ycoord][xcoord]) == ship){
+                    return 1;
+                }
+                
+            }
+            
+        } catch (Exception e) {
+            return -1;     
+        }
         return 0;
+//        if ((xcoord >= 0 && xcoord <= (board[0].length-1)) && (ycoord >=0 && ycoord <= board.length-1)) {
+//            
+//            if (board[ycoord][xcoord] == Config.WATER_CHAR) {
+//                return 2;
+//            } else if ((board[ycoord][xcoord] == Config.HIT_CHAR) || (board[ycoord][xcoord] == Config.MISS_CHAR )) {   
+//                return 3;   
+//            } else if (((board[ycoord][xcoord]) > 0) && ((board[ycoord][xcoord]) < 10)){
+//                return 1;
+//            }
+//            
+//
+//        }
+//        return -1;     
     }
 
     /**
@@ -543,7 +594,41 @@ public class Battleship {
      * @param boardTrack The human player tracking board.
      */
     public static void shootPlayer(Scanner sc, char[][] board, char[][] boardTrack) {
-        // FIXME
+ 
+
+        
+        yRange = boardTrack.length; // Board Height
+        xRange = boardTrack[0].length; // Board Width
+        String xCoordString = null;
+        String xCoordMin, xCoordMax;
+
+        
+        xCoordMin = coordNumToAlpha(0);
+        xCoordMax = coordNumToAlpha(xRange - 1);
+        xCoordString = promptStr(sc, "x-coord shot", xCoordMin, xCoordMax);
+        xCoord = coordAlphaToNum(xCoordString);
+        
+        yCoord = promptInt(sc, "y-coord shot", 0, (yRange - 1));
+        
+       int res = takeShot(board, xCoord, yCoord);
+       
+       if (res == -1) {
+           System.out.println("Coordinates out-of-bounds!");
+       }
+       
+       if (res == -3) {
+           System.out.println("Shot location previously targeted!");
+       }
+       
+       if (res == 1) {
+           boardTrack[yCoord][xCoord] = Config.HIT_CHAR;
+       }
+       
+       if (res == 2) {
+           boardTrack[yCoord][xCoord] = Config.MISS_CHAR;
+       }
+       
+        
     }
 
     /**
@@ -560,7 +645,30 @@ public class Battleship {
      * @param board The human player game board.
      */
     public static void shootComputer(Random rand, char[][] board) {
-        // FIXME
+        
+        yRange = board.length; // Board Height
+        xRange = board[0].length; // Board Width
+        
+        xCoord = rand.nextInt((xRange + Config.MIN_WIDTH - 1));
+        yCoord = rand.nextInt((yRange + Config.MIN_HEIGHT - 1));
+        
+        int res = takeShot(board, xCoord, yCoord);
+        
+        while(!(res == 1 || res == 2)) {
+            xCoord = rand.nextInt((xRange + Config.MIN_WIDTH - 1));
+            yCoord = rand.nextInt((yRange + Config.MIN_HEIGHT - 1));
+            res = takeShot(board, xCoord, yCoord);
+        }
+        
+        if(res == 1 ){
+            board[yCoord][xCoord] = Config.HIT_CHAR;
+        }
+        
+        if( res == 2){
+            board[yCoord][xCoord] = Config.MISS_CHAR;
+        }
+        
+        
     }
 
     /**
@@ -586,9 +694,14 @@ public class Battleship {
      * board (the rows) and the second dimension represents the x-coordinate (the columns).
      *
      * @param args Unused.
+     * @throws FileNotFoundException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 
+        //File file = new File("C:/Temp/JAVA/Battleship/src/INPUT.txt");
+        //Scanner sc = new Scanner(file);
+        
+        
         Scanner sc = new Scanner(System.in);
         Random rand = new Random(Config.SEED);
         boolean loopStatus = true;
@@ -605,8 +718,10 @@ public class Battleship {
             System.out.println();
 
             userBoard = new char[height][width];
+            trackBoard = new char[height][width];
             enemyBoard = new char[height][width];
             initBoard(userBoard);
+            initBoard(trackBoard);
             initBoard(enemyBoard);
 
              shipNum = promptInt(sc, "number of ships",Config.MIN_SHIPS ,Config.MAX_SHIPS);
@@ -626,6 +741,30 @@ public class Battleship {
                 }
             }
 
+            
+            while(!winnerFound) {
+                printBoard(userBoard, "My Ships:");
+                printBoard(trackBoard, "My Shots:");
+                
+                //TODO: remove
+                //printBoard(enemyBoard, "Enemy Ships:");
+                
+                shootPlayer(sc, enemyBoard, trackBoard);
+                
+                if(checkLost(enemyBoard)) {
+                    winnerFound=true;
+                    System.out.println("Congratulations, you sunk all the computer’s ships!");
+                }
+                
+                shootComputer(rand, userBoard);
+                if(checkLost(userBoard)) {
+                    winnerFound=true;
+                    System.out.println("Oh no! The computer sunk all your ships!");
+                }
+            }
+
+            
+            
             //System.out.println();
             loop = promptChar(sc, playAgain);
 

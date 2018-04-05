@@ -41,12 +41,13 @@ public class TestBattleship {
         // testPromptInt();
         // testPromptStr();
         // Milestone 2
-        testCheckWater();
-        testPlaceShip();
-        testPlaceRandomShip();
+        //testCheckWater();
+        //testPlaceShip();
+        //testPlaceRandomShip();
         // Milestone 3
-        // testTakeShot();
-        // testCheckLost();
+        //testTakeShot();
+         //testCheckLost();
+        testShootPlayer();
     }
 
     private static void testCoordAlphaToNum() {
@@ -208,11 +209,106 @@ public class TestBattleship {
     }
 
     private static void testTakeShot() {
-        // FIXME
+        int numTests = 4;
+        int passed = numTests;
+        int res;
+
+        // Battleship.placeShip(boardDim, 5, 4, 2, true, 1);
+        testBoard = new char[6][8];
+        Battleship.initBoard(testBoard);
+        // Battleship.initBoard(boardDim);
+
+        //Battleship.placeShip(testBoard, 2, 2, 2, true, 1);
+        testBoard[3][2] = Config.HIT_CHAR;
+        //FIXME: Hit a ship at 3,2
+        
+        Battleship.printBoard(testBoard, "My Ships:");
+        
+        if ((res = Battleship.takeShot(testBoard, 6, 2)) < 2) { // Checks if the shot would be a miss.
+            System.out.println("FAILED: Battleship.takeShot(testBoard, 6, 2)) < 2, but " + res);
+            passed--;
+        }
+        System.out.println(res);
+        
+        if ((res = Battleship.takeShot(testBoard, 2, 2)) < 1) { // Checks if the shot would be a hit.
+            System.out.println("FAILED: Battleship.takeShot(testBoard, 2, 3)) < 1, but " + res);
+            passed--;
+        }
+        System.out.println(res);
+        
+        if ((res = Battleship.takeShot(testBoard, 8, 3)) < -1) { // Checks if the shot is out-of-bounds.
+            System.out.println("FAILED: Battleship.takeShot(testBoard, 8, 3)) < -1, but " + res);
+            passed--;
+        }
+        System.out.println(res);
+        
+        
+        if ((res = Battleship.takeShot(testBoard, 2, 3)) < 3) { // Checks if the cell was previously targeted.
+            System.out.println("FAILED: Battleship.takeShot(testBoard, 2, 3)) < 3, but " + res);    
+            passed--;
+        }
+        System.out.println(res);
+
+        System.out.println("testCheckWater: Passed " + passed + " of " + numTests + " tests.");
     }
+    
 
     private static void testCheckLost() {
-        // FIXME
+        int numTests = 2;
+        int passed = numTests;
+        boolean res;
+
+        // Battleship.placeShip(boardDim, 5, 4, 2, true, 1);
+        testBoard = new char[6][8];
+        Battleship.initBoard(testBoard);
+
+        if ((res = Battleship.checkLost(testBoard)) != true) { // Checks if there are any more ships to hit. Return true since nothing to hit.
+            System.out.println("FAILED: Battleship.checkLost(testBoard)) != true, but " + res);
+            passed--;
+        }
+        
+        Battleship.placeShip(testBoard, 2, 2, 2, true, 1);
+        //FIXME: Hit a ship at 3,2
+        
+        if ((res = Battleship.checkLost(testBoard)) != false) { // Checks if there are any more ships to hit. Return false since ship was placed prior.
+            System.out.println("FAILED: Battleship.checkLost(testBoard)) != false, but " + res);
+            passed--;
+        }
+
+        System.out.println("testCheckLost: Passed " + passed + " of " + numTests + " tests.");
+    }
+    
+    private static void testShootPlayer() {
+        int numTests = 2;
+        int passed = numTests;
+        boolean res;
+        Scanner sc = new Scanner(System.in);
+        
+        // Battleship.placeShip(boardDim, 5, 4, 2, true, 1);
+
+        char[][] trackBoard = new char[6][8];
+
+        Battleship.initBoard(trackBoard);
+
+        
+        Battleship.placeShip(trackBoard, 2, 2, 2, true, 1);
+
+        //FIXME: Hit a ship at 2,2
+        
+        Battleship.shootPlayer(sc, trackBoard, trackBoard);
+        
+        if (trackBoard[2][1] != Config.MISS_CHAR) { // Checks if there are any more ships to hit. Return false since ship was placed prior.
+            System.out.println("FAILED: trackBoard[2][1] != Config.MISS_CHAR, but " + enemyBoard[2][2]);           passed--;
+        }
+        
+        if (trackBoard[2][2] != Config.HIT_CHAR) { // Checks if there are any more ships to hit. Return false since ship was placed prior.
+            System.out.println("trackBoard[2][2] != Config.HIT_CHAR, but " + enemyBoard[3][2]);
+            passed--;
+        }
+        
+        Battleship.printBoard(enemyBoard, "My Ships:");
+        
+        System.out.println("testCheckLost: Passed " + passed + " of " + numTests + " tests.");
     }
 
     private static void testPromptInt() {
