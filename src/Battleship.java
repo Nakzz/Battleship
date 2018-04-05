@@ -12,12 +12,12 @@ import java.util.Random;
 public class Battleship {
 
     static int height, width, xRange, yRange, xRangeEnemy, yRangeEnemy, xCoord, yCoord, shipLength,
-        spaceExists, shipID, shipNum;
-    static char loop, orientationInput, tryAgain;
-    public static int i, j;
-    static boolean orientation, shipPlaced, randomShipPlaced, tryAgainBool, addShipStatus, winnerFound;
-    static char userBoard[][], enemyBoard[][], trackBoard[][];
-    static String log;
+    spaceExists, shipID, shipNum;
+static char loop, orientationInput, tryAgain;
+public static int i, j;
+static boolean orientation, shipPlaced, randomShipPlaced, tryAgainBool, addShipStatus, winnerFound;
+static char userBoard[][], enemyBoard[][], trackBoard[][];
+    // static String log;
 
     /**
      * This method converts a String representing a base (or radix) 26 number into a decimal (or
@@ -37,31 +37,24 @@ public class Battleship {
      * @return The numeric representation of the coordinate.
      */
     public static int coordAlphaToNum(String coord) {
-
-        // System.out.println("Debug.coordAlphaToNum: String Coming In= " + coord);
         coord = coord.toUpperCase();
-        // System.out.println("Debug: Upper String= " + coord);
-        int lenght = coord.length();
-        char eachletter;
-        int i, j = 0, lenghts, sum = 0;
+        int length = coord.length();
+        char eachLetter;
+        int i, j = 0, lengths, sum = 0;
         double ASCII, doubleI = 0.0;
 
-        for (i = 0; i < lenght; i++) {
-
-            eachletter = coord.charAt(i);
-            ASCII = eachletter - 'A';
-            lenghts = lenght - i - 1;
-            doubleI = (double) (lenghts);
+        for (i = 0; i < length; i++) {
+            eachLetter = coord.charAt(i);
+            ASCII = eachLetter - 'A'; // Relative to 'A'.
+            lengths = length - i - 1;
+            doubleI = (double) (lengths); // Casting a double from integer.
             sum = sum + (int) ((ASCII * Math.pow(26, doubleI))); //
 
             // System.out.println("Debug: i=" + i);
             // System.out.println("Debug: char=" + eachletter);
             // System.out.println("Debug: ASCII=" + ASCII);
             // System.out.println("Debug: sum=" + sum);
-
-
         }
-
         return sum;
     }
 
@@ -88,12 +81,11 @@ public class Battleship {
         }
 
         while (num > 0 || num < 0) {
-            int remainder = num % 26;
-            char digit = (char) (remainder + 'A');
-            result = digit + result;
-            num = (num - remainder) / 26;
+            int remainder = num % 26;   //Finding remainder 
+            char digit = (char) (remainder + 'A');  //Casting char from int, relative to A.
+            result = digit + result;    //Add digit to the string initialized.
+            num = (num - remainder) / 26;   //Calculation to keep running while loop.
         }
-
         // System.out.println("Debug: result=" + result);
         return result;
     }
@@ -116,14 +108,12 @@ public class Battleship {
      * @return Returns the value read from the user.
      */
     public static int promptInt(Scanner sc, String valName, int min, int max) {
-
         // System.out.println("Debug.promtInt: y cord STRING: "+ valName);
 
         System.out.print("Enter the " + valName + " (" + min + " to " + max + "): ");
         int input = sc.nextInt();
 
-
-        while ((input < min) || (input > max)) {
+        while ((input < min) || (input > max)) {    //Makes sure input is in range.
             System.out.println("Invalid value.");
             System.out.print("Enter the " + valName + " (" + min + " to " + max + "): ");
             input = sc.nextInt();
@@ -150,18 +140,15 @@ public class Battleship {
      */
     public static String promptStr(Scanner sc, String valName, String min, String max) {
         System.out.print("Enter the " + valName + " (" + min + " to " + max + "): ");
-        String input = sc.next();
-        input += sc.nextLine();
-
-
-
+        String input = sc.next();   //Taking the next object
+        input += sc.nextLine(); //Makes sure you add entire line to input.
         input = input.trim();
 
         int valueInput = coordAlphaToNum(input);
         int valueMin = coordAlphaToNum(min);
         int valueMax = coordAlphaToNum(max);
 
-        while ((valueInput < valueMin) || (valueInput > valueMax)) {
+        while ((valueInput < valueMin) || (valueInput > valueMax)) {    //Makes sure valueInput is in range.
             System.out.println("Invalid value.");
             System.out.print("Enter the " + valName + " (" + min + " to " + max + "): ");
             input = sc.nextLine().trim();
@@ -186,10 +173,8 @@ public class Battleship {
     public static char promptChar(Scanner sc, String prompt) {
         System.out.print(prompt);
 
-        String input = sc.next();
-        input += sc.nextLine();
-
-
+        String input = sc.next();   //Taking the next object
+        input += sc.nextLine(); //Makes sure you add entire line to input.
         input = input.trim();
         input = input.toLowerCase();
 
@@ -206,21 +191,13 @@ public class Battleship {
      */
     public static void initBoard(char board[][]) {
 
-        // board=char[i][j];
-        // System.out.println("Debug: board.length= "+ board.length);
+        int yRange = board.length; // Board Height
+        int xRange = board[0].length; // Board Width
 
-        yRange = board.length; // Board Height
-        xRange = board[0].length; // Board Width
-
-        for (i = 0; i < xRange; i++) { // width
-            // System.out.println("Debug: board.width= "+ board.length);
-            for (j = 0; j < yRange; j++) { // height
-                // System.out.println("Debug: board i .height= "+ board[i].length);
-                // System.out.println("Debug: board.width= "+ board.length);
+        for (int i = 0; i < xRange; i++) { 
+            for (int j = 0; j < yRange; j++) { 
                 board[j][i] = Config.WATER_CHAR;
-
             }
-
         }
     }
 
@@ -236,33 +213,27 @@ public class Battleship {
      * @param caption The board caption.
      */
     public static void printBoard(char board[][], String caption) {
-        yRange = board.length; // Board Height
-        xRange = board[0].length; // Board Width
+        int yRange = board.length; // Board Height
+        int xRange = board[0].length; // Board Width
         System.out.println(caption);
-
         System.out.print("   ");
-        for (j = 0; j < xRange; j++) {
-            System.out.print("" + "  " + coordNumToAlpha(j));    // Prints A B C D
+        
+        for (int j = 0; j < xRange; j++) {
+            System.out.print("" + "  " + coordNumToAlpha(j)); // Prints A B C D...
         }
+        
         System.out.println();
-
-        for (i = 0; i < yRange; i++) {
-
+        
+        for (int i = 0; i < yRange; i++) {
             System.out.print("  ");
-            System.out.print("" + i+ "");
-
-
-
-            for (j = 0; j < xRange; j++) {
-
-                System.out.print("  " +board[i][j]);
-                
+            System.out.print("" + i + "");  // Prints Row number
+            
+            for (int j = 0; j < xRange; j++) {
+                System.out.print("  " + board[i][j]);
             }
-
             System.out.println();
             System.out.println();
         }
-
     }
 
     /**
@@ -280,26 +251,24 @@ public class Battleship {
      *         of the board.
      */
     public static int checkWater(char board[][], int xcoord, int ycoord, int len, boolean dir) {
+        if ((xcoord >= 0 && xcoord <= (board[0].length - 1))
+            && (ycoord >= 0 && ycoord <= board.length - 1)) {   //Enter if in-bound
 
- if ((xcoord >= 0 && xcoord <= (board[0].length-1)) && (ycoord >=0 && ycoord <= board.length-1)) {
-            
-            if (dir == true) {
-                if ((ycoord+(len-1) <= board.length-1)) {
-                    
-                    for (int i=0; i<len; i++) {
-                        if (board[ycoord+i][xcoord] != Config.WATER_CHAR) {
+            if (dir == true) {  //Enter if vertical
+                if ((ycoord + (len - 1) <= board.length - 1)) { //Consider the length of the ship
+                    for (int i = 0; i < len; i++) {
+                        if (board[ycoord + i][xcoord] != Config.WATER_CHAR) {
                             return -1;
                         }
                     }
                     return 1;
                 }
             }
-            
-            if (dir == false) {
-                if ((xcoord+(len-1) <= board[0].length-1)) {
-                    
-                    for (int i=0; i<len; i++) {
-                        if (board[ycoord][xcoord+i] != Config.WATER_CHAR) {
+
+            if (dir == false) { //Enter if horizontal
+                if ((xcoord + (len - 1) <= board[0].length - 1)) {  //Consider the width of the ship
+                    for (int i = 0; i < len; i++) {
+                        if (board[ycoord][xcoord + i] != Config.WATER_CHAR) {
                             return -1;
                         }
                     }
@@ -307,7 +276,7 @@ public class Battleship {
                 }
             }
         }
-        return -2;     
+        return -2;
     }
 
     /**
@@ -318,17 +287,15 @@ public class Battleship {
      */
     public static boolean checkLost(char board[][]) {
         int i, j;
-        yRange = board.length; // Board Height
-        xRange = board[0].length; // Board Width
+        int yRange = board.length; // Board Height
+        int xRange = board[0].length; // Board Width
 
-        for (i = 0; i < xRange; i++) { // width
-            // System.out.println("Debug: board.width= "+ board.length);
-            for (j = 0; j < yRange; j++) { // height
-                if((takeShot(board, i, j)) == 1) {
+        for (i = 0; i < xRange; i++) { 
+            for (j = 0; j < yRange; j++) {
+                if ((takeShot(board, i, j)) == 1) { //Check every possible coord
                     return false;
                 }
             }
-
         }
         return true;
     }
@@ -349,10 +316,11 @@ public class Battleship {
      */
     public static boolean placeShip(char board[][], int xcoord, int ycoord, int len, boolean dir,
         int id) {
+        int i, j;
         char ship = (char) (id + 48);
-        yRange = board.length; // Board Height
-        xRange = board[0].length; // Board Width
-        shipLength = len;
+        int yRange = board.length; // Board Height
+        int xRange = board[0].length; // Board Width
+        int shipLength = len;
 
         try {
             if (dir) { // Vertical Ship
@@ -368,13 +336,13 @@ public class Battleship {
                     return false; // the ship is out-of-bounds of the board.
                 }
                 for (i = 0; i < shipLength; i++) {
-                    board[ycoord][xcoord] = ship;
+                    board[ycoord][xcoord] = ship;   //Change char of the board to ship
                     xcoord = xcoord + 1;
                     // System.out.println(board[xcoord][ycoord]);
                 }
             }
             return true;
-        } catch (Exception e) {
+        } catch (Exception e) { //If out-of-bound, most-likely index error
             return false;
         }
     }
@@ -402,41 +370,35 @@ public class Battleship {
      */
     public static boolean placeRandomShip(char board[][], int len, int id, Random rand) {
 
-        yRange = board.length; // Board Height
-        xRange = board[0].length; // Board Width
+        int yRange = board.length; // Board Height
+        int xRange = board[0].length; // Board Width
         int tries = 0;
-        shipLength = len;
+        int shipLength = len;
+        boolean orientation;
+        int xCoord, yCoord, spaceExists;
 
         do {
             orientation = rand.nextBoolean();
-            
+
             if (orientation) { // Vertical Ship
                 xCoord = rand.nextInt((xRange));
-                yCoord = rand.nextInt((yRange-len+1));           
+                yCoord = rand.nextInt((yRange - len + 1));
             } else { // Horizontal Ship
-                xCoord = rand.nextInt((xRange-len+1));
+                xCoord = rand.nextInt((xRange - len + 1));
                 yCoord = rand.nextInt((yRange));
             }
-            
-            
-            
+
             spaceExists = checkWater(board, xCoord, yCoord, shipLength, orientation);
             tries++;
 
-            // System.out.println("Debug: y, x= "+ yCoord + ", "+ xCoord+ " shipExists: " +
-            // orientation +" orientation: " + shipExist + " tries: "+ tries);
-        } while ((spaceExists != 1) && (tries < Config.RAND_SHIP_TRIES));
-
-        // After Tries, if ship
-
-        if (spaceExists == 1) {
-            placeShip(board, xCoord, yCoord, shipLength, orientation, id);
+        } while ((spaceExists != 1) && (tries < Config.RAND_SHIP_TRIES));  // Make sure doesn't try more 
+                                                                           // than 20
+        if (spaceExists == 1) { //If coord is vacant
+            placeShip(board, xCoord, yCoord, shipLength, orientation, id);  
             return true;
         } else {
             return false;
         }
-
-
     }
 
     /**
@@ -468,13 +430,16 @@ public class Battleship {
      */
     public static boolean addShip(Scanner sc, char boardPrime[][], char boardOpp[][], int id,
         Random rand) {
-        yRange = boardPrime.length; // Board Height
-        xRange = boardPrime[0].length; // Board Width
-        yRangeEnemy = boardOpp.length; // Board Height
-        xRangeEnemy = boardOpp[0].length; // Board Width
+        int yRange = boardPrime.length; // Board Height
+        int xRange = boardPrime[0].length; // Board Width
+        int yRangeEnemy = boardOpp.length; // Board Height
+        int xRangeEnemy = boardOpp[0].length; // Board Width
         String xCoordString = null;
         String xCoordMin, xCoordMax;
-        tryAgainBool = true;
+        boolean tryAgainBool = true;
+        boolean orientation, shipPlaced = false, randomShipPlaced = false;
+        char orientationInput, tryAgain, loop = 0;
+        int shipLength, xCoord, yCoord, spaceExists;
 
         while (tryAgainBool) {
             printBoard(boardPrime, "My Ships:");
@@ -484,22 +449,20 @@ public class Battleship {
                 orientation = true;
                 shipLength = promptInt(sc, "ship length", Config.MIN_SHIP_LEN, yRange);
 
-                xCoordMin = coordNumToAlpha(0);
-                xCoordMax = coordNumToAlpha(xRange - 1);
+                xCoordMin = coordNumToAlpha(0); //A
+                xCoordMax = coordNumToAlpha(xRange - 1);    //Letter of Range- 1 
                 xCoordString = promptStr(sc, "x-coord", xCoordMin, xCoordMax);
                 xCoord = coordAlphaToNum(xCoordString);
-
                 yCoord = promptInt(sc, "y-coord", 0, (yRange - shipLength));
 
 
             } else { // Horizontal
-                orientation= false;
+                orientation = false;
                 shipLength = promptInt(sc, "ship length", Config.MIN_SHIP_LEN, xRange);
                 xCoordMin = coordNumToAlpha(0);
                 xCoordMax = coordNumToAlpha(xRange - shipLength);
                 xCoordString = promptStr(sc, "x-coord", xCoordMin, xCoordMax);
                 xCoord = coordAlphaToNum(xCoordString);
-
                 yCoord = promptInt(sc, "y-coord", 0, (yRange - 1));
             }
 
@@ -513,10 +476,10 @@ public class Battleship {
                     System.out.println("Unable to place opponent ship: " + id);
                     return false;
                 }
-                tryAgainBool= false;
-            } else if (spaceExists == -1){
+                tryAgainBool = false;
+            } else if (spaceExists == -1) {
                 tryAgain = promptChar(sc, "No room for ship. Try again? (y/n): ");
-                
+
                 if (tryAgain == 'y') {
                     tryAgainBool = true;
                 } else if (loop == 'n') {
@@ -544,46 +507,35 @@ public class Battleship {
      */
     public static int takeShot(char[][] board, int x, int y) {
 
-        
+
         int xcoord = x;
         int ycoord = y;
-        
-        
+
+
         try {
             if (board[ycoord][xcoord] == Config.WATER_CHAR) {
                 return 2;
-            } 
-            
-            if ((board[ycoord][xcoord] == Config.HIT_CHAR) || (board[ycoord][xcoord] == Config.MISS_CHAR )) {   
-                return 3;   
-            } 
-            
-            for(i=1; i<10; i++) {
+            }
+
+            if ((board[ycoord][xcoord] == Config.HIT_CHAR)
+                || (board[ycoord][xcoord] == Config.MISS_CHAR)) {
+                return 3;
+            }
+
+            for (int i = 1; i < 10; i++) {
                 char ship = (char) (i + 48);
-                
-                if ((board[ycoord][xcoord]) == ship){
+
+                if ((board[ycoord][xcoord]) == ship) {
                     return 1;
                 }
-                
+
             }
-            
+
         } catch (Exception e) {
-            return -1;     
+            return -1;
         }
         return 0;
-//        if ((xcoord >= 0 && xcoord <= (board[0].length-1)) && (ycoord >=0 && ycoord <= board.length-1)) {
-//            
-//            if (board[ycoord][xcoord] == Config.WATER_CHAR) {
-//                return 2;
-//            } else if ((board[ycoord][xcoord] == Config.HIT_CHAR) || (board[ycoord][xcoord] == Config.MISS_CHAR )) {   
-//                return 3;   
-//            } else if (((board[ycoord][xcoord]) > 0) && ((board[ycoord][xcoord]) < 10)){
-//                return 1;
-//            }
-//            
-//
-//        }
-//        return -1;     
+
     }
 
     /**
@@ -603,43 +555,43 @@ public class Battleship {
      * @param boardTrack The human player tracking board.
      */
     public static void shootPlayer(Scanner sc, char[][] board, char[][] boardTrack) {
- 
 
-        
-        yRange = boardTrack.length; // Board Height
-        xRange = boardTrack[0].length; // Board Width
+
+
+        int yRange = boardTrack.length; // Board Height
+        int xRange = boardTrack[0].length; // Board Width
         String xCoordString = null;
         String xCoordMin, xCoordMax;
 
-        
+
         xCoordMin = coordNumToAlpha(0);
         xCoordMax = coordNumToAlpha(xRange - 1);
         xCoordString = promptStr(sc, "x-coord shot", xCoordMin, xCoordMax);
-        xCoord = coordAlphaToNum(xCoordString);
-        
-        yCoord = promptInt(sc, "y-coord shot", 0, (yRange - 1));
-        
-       int res = takeShot(board, xCoord, yCoord);
-       
-       if (res == -1) {
-           System.out.println("Coordinates out-of-bounds!");
-       }
-       
-       if (res == -3) {
-           System.out.println("Shot location previously targeted!");
-       }
-       
-       if (res == 1) {
-           boardTrack[yCoord][xCoord] = Config.HIT_CHAR;
-           board[yCoord][xCoord] = Config.HIT_CHAR;
-       }
-       
-       if (res == 2) {
-           boardTrack[yCoord][xCoord] = Config.MISS_CHAR;
-           board[yCoord][xCoord] = Config.MISS_CHAR;
-       }
-       
-        
+        int xCoord = coordAlphaToNum(xCoordString);
+
+        int yCoord = promptInt(sc, "y-coord shot", 0, (yRange - 1));
+
+        int res = takeShot(board, xCoord, yCoord);
+
+        if (res == -1) {
+            System.out.println("Coordinates out-of-bounds!");
+        }
+
+        if (res == -3) {
+            System.out.println("Shot location previously targeted!");
+        }
+
+        if (res == 1) {
+            boardTrack[yCoord][xCoord] = Config.HIT_CHAR;
+            board[yCoord][xCoord] = Config.HIT_CHAR;
+        }
+
+        if (res == 2) {
+            boardTrack[yCoord][xCoord] = Config.MISS_CHAR;
+            board[yCoord][xCoord] = Config.MISS_CHAR;
+        }
+
+
     }
 
     /**
@@ -656,33 +608,32 @@ public class Battleship {
      * @param board The human player game board.
      */
     public static void shootComputer(Random rand, char[][] board) {
-        
-        yRange = board.length; // Board Height
-        xRange = board[0].length; // Board Width
-        
 
-        
+        int yRange = board.length; // Board Height
+        int xRange = board[0].length; // Board Width
+        int xCoord;
+        int yCoord;
         int res;
-        
+
         do {
             xCoord = rand.nextInt((xRange));
             yCoord = rand.nextInt((yRange));
             res = takeShot(board, xCoord, yCoord);
-            
-            log += "(" + xCoord + ", " + yCoord+ "), ";
-        }while(!(res == 1 || res == 2));
-        
-        
-        
-        if(res == 1 ){
+
+            // log += "(" + xCoord + ", " + yCoord+ "), ";
+        } while (!(res == 1 || res == 2));
+
+
+
+        if (res == 1) {
             board[yCoord][xCoord] = Config.HIT_CHAR;
         }
-        
-        if( res == 2){
+
+        if (res == 2) {
             board[yCoord][xCoord] = Config.MISS_CHAR;
         }
-        
-        
+
+
     }
 
     /**
@@ -708,27 +659,29 @@ public class Battleship {
      * board (the rows) and the second dimension represents the x-coordinate (the columns).
      *
      * @param args Unused.
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException {
-
-        File file = new File("C:/Temp/JAVA/Battleship/src/INPUT.txt");
-        Scanner sc = new Scanner(file);
-        
-        
-        //Scanner sc = new Scanner(System.in);
+        // File file = new File("C:/Temp/JAVA/Battleship/src/INPUT.txt");
+        // Scanner sc = new Scanner(file);
+        Scanner sc = new Scanner(System.in);
         Random rand = new Random(Config.SEED);
+
+        char userBoard[][], enemyBoard[][], trackBoard[][];
+        int height, width, shipNum;
+        char loop;
+        boolean winnerFound = false;
         boolean loopStatus = true;
-        addShipStatus = true;
+        boolean addShipStatus = true;
         String playAgain = "Would you like to play again? (y/n): ";
 
 
         System.out.println("Welcome to Battleship!");
         while (loopStatus) {
-            height= promptInt(sc, "board height",Config.MIN_HEIGHT ,Config.MAX_HEIGHT );
-            width= promptInt(sc, "board width",Config.MIN_WIDTH ,Config.MAX_WIDTH);
-            //height = 8;
-            //width = 5;
+            height = promptInt(sc, "board height", Config.MIN_HEIGHT, Config.MAX_HEIGHT);
+            width = promptInt(sc, "board width", Config.MIN_WIDTH, Config.MAX_WIDTH);
+            // height = 8;
+            // width = 5;
             System.out.println();
 
             userBoard = new char[height][width];
@@ -738,12 +691,12 @@ public class Battleship {
             initBoard(trackBoard);
             initBoard(enemyBoard);
 
-             shipNum = promptInt(sc, "number of ships",Config.MIN_SHIPS ,Config.MAX_SHIPS);
-            //shipNum = 3;
+            shipNum = promptInt(sc, "number of ships", Config.MIN_SHIPS, Config.MAX_SHIPS);
+            // shipNum = 3;
 
             for (int idOfShip = 1; idOfShip <= shipNum; idOfShip++) {
                 addShipStatus = addShip(sc, userBoard, enemyBoard, idOfShip, rand);
-                //System.out.println("Debug.MAIN i: "+ i);
+                // System.out.println("Debug.MAIN i: "+ i);
                 if (!addShipStatus) {
                     loop = promptChar(sc, "Error adding ships. Restart game? (y/n): ");
                     if (loop == 'y') {
@@ -756,38 +709,37 @@ public class Battleship {
             }
 
             do {
-                //System.out.println("DEBUG: LOG: " + log);
-                
+                // System.out.println("DEBUG: LOG: " + log);
+
                 printBoard(userBoard, "My Ships:");
                 printBoard(trackBoard, "My Shots:");
-                
-                //TODO: remove
-                //printBoard(enemyBoard, "Enemy Ships:");
-                
+
+                // TODO: remove
+                // printBoard(enemyBoard, "Enemy Ships:");
+
                 shootPlayer(sc, enemyBoard, trackBoard);
-                
-                if(checkLost(enemyBoard)) {
-                    winnerFound=true;
+
+                if (checkLost(enemyBoard)) {
+                    winnerFound = true;
                     System.out.println("Congratulations, you sunk all the computer's ships!");
                     printBoard(userBoard, "My Ships:");
                     printBoard(trackBoard, "My Shots:");
                     break;
                 }
-                
+
                 shootComputer(rand, userBoard);
-                if(checkLost(userBoard)) {
-                    winnerFound=true;
+                if (checkLost(userBoard)) {
+                    winnerFound = true;
                     System.out.println("Oh no! The computer sunk all your ships!");
                     printBoard(userBoard, "My Ships:");
                     printBoard(trackBoard, "My Shots:");
                     break;
                 }
-            }
-            while(!winnerFound); 
+            } while (!winnerFound);
 
-            
-            
-            //System.out.println();
+
+
+            // System.out.println();
             loop = promptChar(sc, playAgain);
 
             if (loop == 'y') {
