@@ -407,12 +407,19 @@ public class Battleship {
         int tries = 0;
         shipLength = len;
 
-
-
         do {
             orientation = rand.nextBoolean();
-            xCoord = rand.nextInt((xRange));
-            yCoord = rand.nextInt((yRange));
+            
+            if (orientation) { // Vertical Ship
+                xCoord = rand.nextInt((xRange));
+                yCoord = rand.nextInt((yRange-len+1));           
+            } else { // Horizontal Ship
+                xCoord = rand.nextInt((xRange-len+1));
+                yCoord = rand.nextInt((yRange));
+            }
+            
+            
+            
             spaceExists = checkWater(board, xCoord, yCoord, shipLength, orientation);
             tries++;
 
@@ -748,9 +755,8 @@ public class Battleship {
                 }
             }
 
-            
-            while(!winnerFound) {
-                System.out.println("DEBUG: LOG: " + log);
+            do {
+                //System.out.println("DEBUG: LOG: " + log);
                 
                 printBoard(userBoard, "My Ships:");
                 printBoard(trackBoard, "My Shots:");
@@ -762,7 +768,9 @@ public class Battleship {
                 
                 if(checkLost(enemyBoard)) {
                     winnerFound=true;
-                    System.out.println("Congratulations, you sunk all the computer’s ships!");
+                    System.out.println("Congratulations, you sunk all the computer's ships!");
+                    printBoard(userBoard, "My Ships:");
+                    printBoard(trackBoard, "My Shots:");
                     break;
                 }
                 
@@ -770,9 +778,12 @@ public class Battleship {
                 if(checkLost(userBoard)) {
                     winnerFound=true;
                     System.out.println("Oh no! The computer sunk all your ships!");
+                    printBoard(userBoard, "My Ships:");
+                    printBoard(trackBoard, "My Shots:");
                     break;
                 }
             }
+            while(!winnerFound); 
 
             
             
