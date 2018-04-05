@@ -411,8 +411,8 @@ public class Battleship {
 
         do {
             orientation = rand.nextBoolean();
-            xCoord = rand.nextInt((xRange + Config.MIN_WIDTH - 1));
-            yCoord = rand.nextInt((yRange + Config.MIN_HEIGHT - 1));
+            xCoord = rand.nextInt((xRange));
+            yCoord = rand.nextInt((yRange));
             spaceExists = checkWater(board, xCoord, yCoord, shipLength, orientation);
             tries++;
 
@@ -658,8 +658,8 @@ public class Battleship {
         int res;
         
         do {
-            xCoord = rand.nextInt((xRange + 1));
-            yCoord = rand.nextInt((yRange + 1));
+            xCoord = rand.nextInt((xRange));
+            yCoord = rand.nextInt((yRange));
             res = takeShot(board, xCoord, yCoord);
             
             log += "(" + xCoord + ", " + yCoord+ "), ";
@@ -750,7 +750,7 @@ public class Battleship {
 
             
             while(!winnerFound) {
-                System.out.println("DEBUG: log: " + log);
+                System.out.println("DEBUG: LOG: " + log);
                 
                 printBoard(userBoard, "My Ships:");
                 printBoard(trackBoard, "My Shots:");
