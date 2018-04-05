@@ -17,7 +17,7 @@ public class Battleship {
     public static int i, j;
     static boolean orientation, shipPlaced, randomShipPlaced, tryAgainBool, addShipStatus, winnerFound;
     static char userBoard[][], enemyBoard[][], trackBoard[][];
-
+    static String log;
 
     /**
      * This method converts a String representing a base (or radix) 26 number into a decimal (or
@@ -545,7 +545,9 @@ public class Battleship {
         try {
             if (board[ycoord][xcoord] == Config.WATER_CHAR) {
                 return 2;
-            } else if ((board[ycoord][xcoord] == Config.HIT_CHAR) || (board[ycoord][xcoord] == Config.MISS_CHAR )) {   
+            } 
+            
+            if ((board[ycoord][xcoord] == Config.HIT_CHAR) || (board[ycoord][xcoord] == Config.MISS_CHAR )) {   
                 return 3;   
             } 
             
@@ -622,10 +624,12 @@ public class Battleship {
        
        if (res == 1) {
            boardTrack[yCoord][xCoord] = Config.HIT_CHAR;
+           board[yCoord][xCoord] = Config.HIT_CHAR;
        }
        
        if (res == 2) {
            boardTrack[yCoord][xCoord] = Config.MISS_CHAR;
+           board[yCoord][xCoord] = Config.MISS_CHAR;
        }
        
         
@@ -649,16 +653,19 @@ public class Battleship {
         yRange = board.length; // Board Height
         xRange = board[0].length; // Board Width
         
-        xCoord = rand.nextInt((xRange + Config.MIN_WIDTH - 1));
-        yCoord = rand.nextInt((yRange + Config.MIN_HEIGHT - 1));
+
         
-        int res = takeShot(board, xCoord, yCoord);
+        int res;
         
-        while(!(res == 1 || res == 2)) {
-            xCoord = rand.nextInt((xRange + Config.MIN_WIDTH - 1));
-            yCoord = rand.nextInt((yRange + Config.MIN_HEIGHT - 1));
+        do {
+            xCoord = rand.nextInt((xRange + 1));
+            yCoord = rand.nextInt((yRange + 1));
             res = takeShot(board, xCoord, yCoord);
-        }
+            
+            log += "(" + xCoord + ", " + yCoord+ "), ";
+        }while(!(res == 1 || res == 2));
+        
+        
         
         if(res == 1 ){
             board[yCoord][xCoord] = Config.HIT_CHAR;
@@ -698,11 +705,11 @@ public class Battleship {
      */
     public static void main(String[] args) throws FileNotFoundException {
 
-        //File file = new File("C:/Temp/JAVA/Battleship/src/INPUT.txt");
-        //Scanner sc = new Scanner(file);
+        File file = new File("C:/Temp/JAVA/Battleship/src/INPUT.txt");
+        Scanner sc = new Scanner(file);
         
         
-        Scanner sc = new Scanner(System.in);
+        //Scanner sc = new Scanner(System.in);
         Random rand = new Random(Config.SEED);
         boolean loopStatus = true;
         addShipStatus = true;
@@ -743,6 +750,8 @@ public class Battleship {
 
             
             while(!winnerFound) {
+                System.out.println("DEBUG: log: " + log);
+                
                 printBoard(userBoard, "My Ships:");
                 printBoard(trackBoard, "My Shots:");
                 
@@ -754,12 +763,14 @@ public class Battleship {
                 if(checkLost(enemyBoard)) {
                     winnerFound=true;
                     System.out.println("Congratulations, you sunk all the computer’s ships!");
+                    break;
                 }
                 
                 shootComputer(rand, userBoard);
                 if(checkLost(userBoard)) {
                     winnerFound=true;
                     System.out.println("Oh no! The computer sunk all your ships!");
+                    break;
                 }
             }
 

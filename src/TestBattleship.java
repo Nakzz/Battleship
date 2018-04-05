@@ -47,7 +47,7 @@ public class TestBattleship {
         // Milestone 3
         //testTakeShot();
          //testCheckLost();
-        testShootPlayer();
+        //testShootPlayer();
     }
 
     private static void testCoordAlphaToNum() {
@@ -298,15 +298,15 @@ public class TestBattleship {
         Battleship.shootPlayer(sc, trackBoard, trackBoard);
         
         if (trackBoard[2][1] != Config.MISS_CHAR) { // Checks if there are any more ships to hit. Return false since ship was placed prior.
-            System.out.println("FAILED: trackBoard[2][1] != Config.MISS_CHAR, but " + enemyBoard[2][2]);           passed--;
+            System.out.println("FAILED: trackBoard[2][1] != Config.MISS_CHAR, but " + trackBoard[2][2]);           passed--;
         }
         
         if (trackBoard[2][2] != Config.HIT_CHAR) { // Checks if there are any more ships to hit. Return false since ship was placed prior.
-            System.out.println("trackBoard[2][2] != Config.HIT_CHAR, but " + enemyBoard[3][2]);
+            System.out.println("trackBoard[2][2] != Config.HIT_CHAR, but " + trackBoard[3][2]);
             passed--;
         }
         
-        Battleship.printBoard(enemyBoard, "My Ships:");
+        Battleship.printBoard(trackBoard, "My Ships:");
         
         System.out.println("testCheckLost: Passed " + passed + " of " + numTests + " tests.");
     }
